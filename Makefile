@@ -1,5 +1,11 @@
+CC = gcc
+CFLAGS = -g
+
 aprox: main.o splines.o points.o aproksymator_na_bazie.o gaus/libge.a
 	$(CC) -o aprox  main.o splines.o points.o aproksymator_na_bazie.o -L gaus -l ge
+
+aproxDBG: main.o splines.o points.o aproksymator_na_bazie.o gaus/libge.a
+	$(CC) $(CFLAGS) -o aproxDBG main.o splines.o points.o aproksymator_na_bazie.o -L gaus -l ge -ggdb 
 
 intrp: main.o splines.o points.o interpolator.o gaus/libge.a
 	$(CC) -o intrp  main.o splines.o points.o interpolator.o -L gaus -l ge
