@@ -1,6 +1,9 @@
 CC = gcc
 CFLAGS = -g
 
+aprox4: main.o splines.o points.o own_aprox_4w.o gaus/libge.a
+	$(CC) -o MyOwnAprox  main.o splines.o points.o own_aprox_4w.o -L gaus -l ge 
+
 aprox: main.o splines.o points.o aproksymator_na_bazie.o gaus/libge.a
 	$(CC) -o aprox  main.o splines.o points.o aproksymator_na_bazie.o -L gaus -l ge
 
@@ -22,4 +25,4 @@ interpolator.o: makespl.h points.h gaus/piv_ge_solver.h
 .PHONY: clean
 
 clean:
-	-rm *.o aprox intrp prosta
+	-rm *.o aprox intrp aproxDBG prosta MyOwnAprox
