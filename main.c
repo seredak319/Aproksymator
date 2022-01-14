@@ -1,7 +1,7 @@
 #include "points.h"
 #include "splines.h"
 #include "makespl.h"
-
+#include <string.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,7 +107,8 @@ main (int argc, char **argv)
 
     fclose (ouf);
   } else if (out != NULL) {  /* if point-file was NOT given, try to read splines from a file */
-    FILE *splf = fopen (out, "r");
+    
+	FILE *splf = fopen (out, "r");
     if (splf == NULL) {
       fprintf (stderr, "%s: can not read spline file: %s\n\n", argv[0], inp);
       exit (EXIT_FAILURE);
@@ -132,18 +133,26 @@ main (int argc, char **argv)
     FILE *gpf = fopen (gpt, "w");
     int i;
     double dx;
-		if( fromX == 0 && toX == 0 ) { /* calculate plot range if it was not specified */
-			if( pts.n > 1 ) {
+		if( fromX == 0 && toX == 0 ) { /* calculate plot range if it was not specified */ 
+	
+// w przypadku wielomianu a nie pochodnych musimy podac przedzial, gdy nie podajemy punktow x / y.
+
+	
+		
+		
+		
+		
+				if( pts.n > 1 ) {
 				fromX= pts.x[0];
 				toX=   pts.x[pts.n-1];
-			} else if( spl.n > 1 ) {
+				} else if( spl.n > 1 && strcmp(progname,"./MyOwnAprox" )!=0 ) {   // w celu maksymalnej modularnosci uzywania tylko jednego main'a 
 				fromX= spl.x[0];
 				toX=   spl.x[spl.n-1];
-			} else {
-				fromX= 0;
-				toX= 1;
+				} else{
+			fprintf(stderr, "%s: Enter an interval: <a,b> = [ -f a ] [ -t b ]\n",progname);
 			}
 		}
+ 
     dx = (toX - fromX) / (n - 1);
 
     if (gpf == NULL) {

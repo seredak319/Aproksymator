@@ -8,22 +8,7 @@
 #include <stdlib.h>
 #include <float.h>
 
-/*
-double DoLeftSide(double* x, double Left, int np, int i, int j, int nb)
-{
-	double temp;
-
-	for(int i=0; i<=9; i++)
-	{
-		temp=0;
-		for(int k=0; k<np; k++)
-		{
-			double sum =1;
-			
-
-
-*/
-
+//    APROKSYMACJA SREDNIOKWADRATOWA Z BAZA WIELOMIANOW 4 STOPNIA 
 
 
 double valA(double* x, int j, int i, int np)
@@ -101,8 +86,8 @@ void make_spl(points_t *pts, spline_t *spl)
 
 	eqs = make_matrix(nb,nb+1);
 	
-	//	AllValuesOfLeftSide5x5[9]; // n, Exi^1, Exi^2, ... Exi^8  // lewa strona wszystkie mozliwe wartosci
-	//	AllValuesOfRightSide5x1[5]; // Eyi, Eyixi, Eyixi^2, Eyixi^3, Eyixi^4 // prawa strona wszystkie mozliwe wartosci
+	//	AllValuesOfLeftSide5x5[9]; // n, Exi^1, Exi^2, ... Exi^8  // lewa strona wszystkie ewentualne mozliwosci
+	//	AllValuesOfRightSide5x1[5]; // Eyi, Eyixi, Eyixi^2, Eyixi^3, Eyixi^4 // prawa strona wszystkie ewentualne mozliwosci
 
 
 	for(j=0; j<nb;j++) // wiersze
@@ -113,9 +98,9 @@ void make_spl(points_t *pts, spline_t *spl)
 			add_to_entry_matrix(eqs,j,nb,valB(x,y,j,np));
 
 	}
-
+#ifdef DEBUG // macierz przed rozwiazaniem
 	write_matrix(eqs, stdout);
-
+#endif
 	if(piv_ge_solver(eqs))
 	{
 		spl->n = 0;
@@ -127,10 +112,24 @@ void make_spl(points_t *pts, spline_t *spl)
  * Funkcja bs_matrix(eqs) natomiast wyznaczy niewiadome (a0,a1,a2,a3,a4) w miejscu wektora prawych stron poprzez podstawienie wsteczne.
  */
 
+#ifdef DEBUG // macierz po rozwiazaniu
+	write_matrix(eqs,stdout);
+#endif
+	if( alloc_spl(spl,nb) == 0 )
+		for(i = 0; i < nb; i++) 
+		spl->x[i] = get_entry_matrix(eqs, i, nb);
 
-//	write_matrix(eqs,stdout);
+#ifdef DEBUG
+	
+	FILE *dbg = fopen("log_MyOwnAprox.txt", "w");
 
-	alloc_spl(spl,nb);
+	for(i = 0; i < nb; i++) 
+	fprintf(dbg, "\t DEBUG INFO spl->x[%d] =: %lf\n",i, spl->x[i]);
+
+	fclose(dbg);
+#endif
+		
+		
 }
 
 

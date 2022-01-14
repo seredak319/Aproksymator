@@ -1,0 +1,4 @@
+reset
+set term png
+set output "fr1.png"
+plot 'test/dane.3', 'myplot'
